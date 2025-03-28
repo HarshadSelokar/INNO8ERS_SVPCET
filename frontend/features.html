@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECHO - Interactive Learning Platform</title>
+    <link rel="stylesheet" href="features.css">
+    
+</head>
+<body>
+  
+    <header>
+        <div class="container">
+            <div class="cnt">
+                <div class="logo">
+                    <img src="../frontend/assets/logo-gestify-main-text.png" alt="">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="cta-button">
+                    <a href="#signup" class="btn-primary">Get Started</a>
+                </div>
+            </div>
+           
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+       
+        <section class="f-btn-s">
+            <div class="f-cnt">
+                <div class="f-btn">
+                    <img src="" alt="">
+                    <span>Sign To Speak</span>
+                </div>
+                <div class="f-btn">
+                    <img src="" alt="">
+                    <span>Speak To Notes</span>
+                </div>
+                <div class="f-btn">
+                    <img src="" alt="">
+                    Sign Language Keyboard
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../frontend/assets/logo-gestify-main.png" alt="ECHO Logo">
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h3>Company</h3>
+                        <ul>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#careers">Careers</a></li>
+                            <li><a href="#press">Press</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="#blog">Blog</a></li>
+                            <li><a href="#help">Help Center</a></li>
+                            <li><a href="#community">Community</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h3>Legal</h3>
+                        <ul>
+                            <li><a href="#privacy">Privacy Policy</a></li>
+                            <li><a href="#terms">Terms of Service</a></li>
+                            <li><a href="#cookies">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <h3>Connect with us</h3>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="icon-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="icon-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="icon-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="icon-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Gestify Learning. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    const header = document.querySelector('header');
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 50) {
+            header.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            header.style.background = 'rgba(26, 35, 50, 0.95)';
+        } else {
+            header.style.boxShadow = 'none';
+            header.style.background = 'var(--dark-bg)';
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+   
+    const animateElements = document.querySelectorAll('.feature-section');
+    
+    const animateOnScroll = function() {
+        animateElements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (elementPosition < windowHeight - 100) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    };
+    
+
+    animateElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+    
+
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+    
+ 
+    const createMobileMenu = function() {
+        const header = document.querySelector('header');
+        const nav = document.querySelector('nav');
+
+        const mobileMenuBtn = document.createElement('button');
+        mobileMenuBtn.classList.add('mobile-menu-btn');
+        mobileMenuBtn.setAttribute('aria-label', 'Toggle menu');
+        mobileMenuBtn.innerHTML = '<span></span><span></span><span></span>';
+
+        header.insertBefore(mobileMenuBtn, nav);
+
+        mobileMenuBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+    };
+    
+    if (window.innerWidth < 768) {
+        createMobileMenu();
+    }
+    
+    window.addEventListener('resize', function() {
+        if (window.innerWidth < 768 && !document.querySelector('.mobile-menu-btn')) {
+            createMobileMenu();
+        }
+    });
+});
+    </script>
+</body>
+</html>
