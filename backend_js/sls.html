@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language to Speech</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { border: 2px solid black; }
+        #wordOutput { font-size: 1.5em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Sign Language to Speech</h1>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+    <p id="output">Detected Gesture: None</p>
+    <p id="wordOutput">Formed Word: </p>
+    <button onclick="clearWord()">Clear Word</button>
+    <button onclick="addSpace()">Add Space</button>
+    <script>
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const output = document.getElementById("output");
+        const wordOutput = document.getElementById("wordOutput");
+        let word = "";
+        let lastGesture = "";
+        let lastGestureTime = 0;
+        const gestureDelay = 2000; // 1 second delay between detections
+
+        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+        hands.onResults((results) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                const gesture = recognizeGesture(landmarks);
+                const currentTime = new Date().getTime();
+                
+                if (gesture !== "Unknown" && gesture !== lastGesture && (currentTime - lastGestureTime > gestureDelay)) {
+                    word += gesture;
+                    wordOutput.innerText = `Formed Word: ${word}`;
+                    lastGesture = gesture;
+                    lastGestureTime = currentTime;
+                    speak(gesture);
+                }
+                output.innerText = `Detected Gesture: ${gesture}`;
+            } else {
+                output.innerText = "No Gesture Detected";
+            }
+        });
+
+        const camera = new Camera(video, {
+            onFrame: async () => await hands.send({ image: video }),
+            width: 640,
+            height: 480
+        });
+        camera.start();
+
+        function speak(text) {
+            if (text && text !== "Unknown") {
+                const speech = new SpeechSynthesisUtterance(text);
+                speechSynthesis.speak(speech);
+            }
+        }
+
+        function clearWord() {
+            word = "";
+            wordOutput.innerText = "Formed Word: ";
+        }
+
+        function addSpace() {
+            word += " ";
+            wordOutput.innerText = `Formed Word: ${word}`;
+        }
+
+        function recognizeGesture(landmarks) {
+            const [thumb, index, middle, ring, pinky] = [
+                landmarks[4],  // Thumb tip
+                landmarks[8],  // Index tip
+                landmarks[12], // Middle tip
+                landmarks[16], // Ring tip
+                landmarks[20]  // Pinky tip
+            ];
+
+            if (index.y < middle.y && middle.y < ring.y && ring.y < pinky.y) {
+                return "H";
+            } else if (index.y < thumb.y && middle.y < thumb.y) {
+                return "Y";
+            } else if (index.x > middle.x && ring.x > pinky.x) {
+                return "N";
+            } else if (index.y < thumb.y && middle.y > thumb.y && ring.y > thumb.y) {
+                return "A";
+            } else if (index.y < middle.y && middle.y > ring.y && ring.y > pinky.y) {
+                return "B";
+            } else if (thumb.x < index.x && index.x < middle.x && middle.x < ring.x && ring.x < pinky.x) {
+                return "C";
+            } else if (index.y > middle.y && ring.y > pinky.y) {
+                return "1";
+            } else if (index.y < middle.y && middle.y > ring.y && ring.y > pinky.y) {
+                return "2";
+            } else if (index.y < middle.y && middle.y < ring.y && ring.y > pinky.y) {
+                return "3";
+            }
+            return "Unknown";
+        }
+    </script>
+</body>
+</html>
