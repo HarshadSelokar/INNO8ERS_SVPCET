@@ -30,10 +30,10 @@
         let word = "";
         let lastGesture = "";
         let lastGestureTime = 0;
-        const gestureDelay = 2000; // 1 second delay between detections
+        const gestureDelay = 3000; // Increased delay for better recognition
 
         const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.7 });
         hands.onResults((results) => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (results.multiHandLandmarks.length > 0) {
@@ -79,33 +79,21 @@
         }
 
         function recognizeGesture(landmarks) {
-            const [thumb, index, middle, ring, pinky] = [
-                landmarks[4],  // Thumb tip
-                landmarks[8],  // Index tip
-                landmarks[12], // Middle tip
-                landmarks[16], // Ring tip
-                landmarks[20]  // Pinky tip
-            ];
-
-            if (index.y < middle.y && middle.y < ring.y && ring.y < pinky.y) {
-                return "H";
-            } else if (index.y < thumb.y && middle.y < thumb.y) {
-                return "Y";
-            } else if (index.x > middle.x && ring.x > pinky.x) {
-                return "N";
-            } else if (index.y < thumb.y && middle.y > thumb.y && ring.y > thumb.y) {
-                return "A";
-            } else if (index.y < middle.y && middle.y > ring.y && ring.y > pinky.y) {
-                return "B";
-            } else if (thumb.x < index.x && index.x < middle.x && middle.x < ring.x && ring.x < pinky.x) {
-                return "C";
-            } else if (index.y > middle.y && ring.y > pinky.y) {
-                return "1";
-            } else if (index.y < middle.y && middle.y > ring.y && ring.y > pinky.y) {
-                return "2";
-            } else if (index.y < middle.y && middle.y < ring.y && ring.y > pinky.y) {
-                return "3";
-            }
+            const fingers = landmarks.map(point => ({ x: point.x, y: point.y }));
+            const [thumb, index, middle, ring, pinky] = [fingers[4], fingers[8], fingers[12], fingers[16], fingers[20]];
+            
+            if (index.y < middle.y && middle.y < ring.y && ring.y < pinky.y) return "H";
+            if (thumb.x < index.x && index.x < middle.x && middle.x < ring.x && ring.x < pinky.x) return "C";
+            if (index.y < middle.y && middle.y < ring.y) return "L";
+            if (thumb.y < index.y && thumb.y < middle.y) return "Y";
+            if (index.y < thumb.y && middle.y > thumb.y) return "A";
+            if (index.y < middle.y && middle.y > ring.y) return "B";
+            if (index.y > middle.y && ring.y > pinky.y) return "1";
+            if (index.y < middle.y && middle.y > ring.y) return "2";
+            if (index.y < middle.y && middle.y < ring.y) return "3";
+            if (thumb.y < index.y && pinky.y < index.y) return "W";
+            if (index.y < pinky.y && ring.y < pinky.y) return "M";
+            if (thumb.x > pinky.x && thumb.y > pinky.y) return "O";
             return "Unknown";
         }
     </script>
