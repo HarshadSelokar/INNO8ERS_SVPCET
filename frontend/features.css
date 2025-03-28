@@ -115,7 +115,7 @@ nav a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 6rem;
 }
 .f-btn{
     display: grid;

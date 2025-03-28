@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Alphabet Learner</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #1A2332;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #5a64765e;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        .asl-image {
+            width: 320px;
+            height: 320px;
+            background: #fff3cd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            border: 3px solid #ffcc00;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease-in-out;
+        }
+        .asl-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        button {
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button:hover, button.selected {
+            background: #ffcc00;
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Learn ASL Alphabets</h1>
+        <div class="asl-image" id="aslDisplay">
+            <img src="" alt="ASL Sign" id="aslImage">
+        </div>
+        <div class="buttons-container" id="buttonsContainer"></div>
+    </div>
+    <script>
+        const aslImages = {
+            A: "A3_jpg.rf.8850b77ae61284df2b0b40d1475b97f1.jpg",
+            B: "B1_jpg.rf.da7a7d47e2e94890eb77d693032248cd.jpg",
+            C: "C9_jpg.rf.0499bc1602cddf18027320fbc97ae10e.jpg",
+            D: "D7_jpg.rf.bb07e27d27e4fbb5ddc16985da1bb783.jpg",
+            E: "E7_jpg.rf.853f20493a13a3106b472f212fa34b6a.jpg",
+            F: "F4_jpg.rf.6c4f597db5c59ae128b19e56e3aa726b.jpg",
+            G: "G9_jpg.rf.b72c3a95a2a0b1a8c103b90f64c8e22e.jpg",
+            H: "H1_jpg.rf.e40e1cf9bd61a1b052ad5bec09271da6.jpg",
+            I: "I19_jpg.rf.a1e238379e84759afbbadb80a51a9896.jpg",
+            J: "J4_jpg.rf.31f4505a23379f0748a2a192dcd29262.jpg",
+            K: "K1_jpg.rf.d753e1e3fbf34890a96c22f479568eb2.jpg",
+            L: "L14_jpg.rf.92049f347e38b9d3936e809ec728e743.jpg",
+            M: "M7_jpg.rf.d073e851e8c66848419c021536a5b70d.jpg",
+            N: "N1_jpg.rf.e4e99172cf71091434b1ed690ccddafa.jpg",
+            O: "O8_jpg.rf.509f42d956f0aea772ad8bd5bae63911.jpg",
+            P: "P8_jpg.rf.c214be8766e6e317bdc2cb8793d6c7de.jpg",
+            Q: "Q20_jpg.rf.cc7405ec04a15309cf287f2bbbb79f8f.jpg",
+            R: "R15_jpg.rf.afda37f77cf3d12da02967a86d94f88e.jpg",
+            S: "S22_jpg.rf.f4d4e014e423d20c9d2d1d566f5a33fa.jpg",
+            T: "T4_jpg.rf.d9d1cb8487bd3a4bc1851721b0c516c5.jpg",
+            U: "U3_jpg.rf.10da012fc7f7c9c4a04a9c2f8df0fd67.jpg",
+            V: "V3_jpg.rf.cf5e876de9b4b38f373e4d3bc6f1c5e5.jpg",
+            W: "W22_jpg.rf.b08e3a39e8878bf5cb1cf51638759eed.jpg",
+            X: "X12_jpg.rf.e0edd02c8000df314e1c84d00e9eb580.jpg",
+            Y: "Y0_jpg.rf.2a69bc4cfed5dfccc5ef008f1b046c41.jpg",
+            Z: "Z2_jpg.rf.593bbbabf79e38eae4e12613ba6243b2.jpg"
+        };
+
+        const buttonsContainer = document.getElementById("buttonsContainer");
+        const aslImage = document.getElementById("aslImage");
+
+        for (let i = 65; i <= 90; i++) {
+            const letter = String.fromCharCode(i);
+            const button = document.createElement("button");
+            button.innerText = letter;
+            button.onclick = function() {
+                document.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
+                button.classList.add("selected");
+                aslImage.src = aslImages[letter] || 'placeholder.svg';
+            };
+            buttonsContainer.appendChild(button);
+        }
+    </script>
+</body>
+</html>
