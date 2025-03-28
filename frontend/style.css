@@ -133,7 +133,7 @@ nav a:hover {
 
 /* Feature Sections */
 .feature-section {
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-lg) 0;~
 }
 
 .feature-content {
@@ -157,6 +157,7 @@ nav a:hover {
 
 .feature-image img {
     max-width: 400px;
+    border-radius: 11px;
 }
 
 .feature-text h2 {
